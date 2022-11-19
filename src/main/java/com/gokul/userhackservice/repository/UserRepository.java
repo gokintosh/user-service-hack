@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<AppUser,Long> {
 
     Boolean existsByUsername(String username);
 
+    AppUser findByDeviceId(Long deviceId);
+
 }
