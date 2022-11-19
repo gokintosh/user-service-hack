@@ -11,15 +11,7 @@ import lombok.Setter;
 @Setter
 public class ClassificationDto {
 
-    private String deviceId;
+    private String device_id;
 
-    private float metal;
-
-    private float plastic;
-
-    private float paper;
-
-    private float mixed;
-
-    private float compost_point;
+    private float pointsEarned;
 }

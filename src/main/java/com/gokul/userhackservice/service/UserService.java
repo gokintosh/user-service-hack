@@ -1,8 +1,10 @@
 package com.gokul.userhackservice.service;
 
 import com.gokul.userhackservice.model.AppUser;
+import com.gokul.userhackservice.model.Compost_Activity;
 import com.gokul.userhackservice.model.ERole;
 import com.gokul.userhackservice.model.Role;
+import com.gokul.userhackservice.repository.CompostRepository;
 import com.gokul.userhackservice.repository.RoleRepository;
 import com.gokul.userhackservice.repository.UserRepository;
 import com.gokul.userhackservice.request.LoginRequest;
@@ -16,7 +18,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -33,6 +37,8 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
 
     private final JwtUtils jwtUtils;
+
+    private final CompostRepository compostRepository;
 
 
     public String registerUser(SignUpRequest signUpRequest) {
@@ -102,5 +108,28 @@ public class UserService {
         return jwt;
 
 
+    }
+
+    public AppUser getUser(String username){
+        return userRepository.findByUsername(username).get();
+    }
+
+    public Long getMonthlyAverage(Long id){
+        List<Compost_Activity> activities = compostRepository.findAllByUser_Id(id);
+        Long score = 0L;
+        int count = 0;
+        for (Compost_Activity activity : activities) {
+            LocalDate date = activity.getDate();
+
+            if (date.getMonth() == LocalDate.now().getMonth() && date.getYear() == LocalDate.now().getYear()) {
+                score += activity.getScore();
+                count++;
+            }
+
+
+        }
+
+
+        return score / count;
     }
 }

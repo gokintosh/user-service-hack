@@ -41,6 +41,8 @@ public class AppUser {
 
         private Long deviceId;
 
+        private ELevel level;
+
         @OneToMany(mappedBy = "user",fetch=FetchType.LAZY,cascade = CascadeType.ALL)
         @JsonManagedReference
         private Set<Compost_Activity>activities;
