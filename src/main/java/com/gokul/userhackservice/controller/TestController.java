@@ -71,8 +71,10 @@ public class TestController {
 
         compost_activity.setDate(LocalDate.now());
         compost_activity.setUser(user);
+        compost_activity.setWeight(classificationDto.getWeight());
         compost_activity.setScore((long) classificationDto.getPointsEarned());
         compostRepository.save(compost_activity);
+        user.setLevel(ELevel.valueOf(assignLevel(user)));
 
         log.info("Compost activity saved!!");
 
@@ -93,6 +95,12 @@ public class TestController {
     @GetMapping("getmonthlyaverage/{id}")
     public Long returnAverageScore(@PathVariable("id") Long id) {
         Long result= userService.getMonthlyAverage(Long.valueOf(id));
+        return result;
+    }
+
+    @GetMapping("getweightinmonth/{id}")
+    public Float returnWeightInMonth(@PathVariable("id") Long id){
+        Float result=userService.getMonthlyWeight(id);
         return result;
     }
 

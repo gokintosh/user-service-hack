@@ -4,6 +4,8 @@ package com.gokul.userhackservice.controller;
 import com.gokul.userhackservice.model.AppUser;
 import com.gokul.userhackservice.model.Compost_Activity;
 import com.gokul.userhackservice.repository.CompostRepository;
+import com.gokul.userhackservice.response.LeaderResponse;
+import com.gokul.userhackservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +22,15 @@ public class LeaderBoardController {
 
     private final CompostRepository compostRepository;
 
+    private final UserService userService;
+
 
 
 
     Long score=0L;
 
     @GetMapping("/showleaderboard")
-    public Map<String,Long>getCompostMap(){
+    public List<LeaderResponse>getCompostMap(){
 
         List<Compost_Activity>compost_activities=compostRepository.findAll();
         Map<String,Long>compostMap=new HashMap<>();
@@ -45,27 +49,24 @@ public class LeaderBoardController {
             compostMap.put(activity.getUser().getUsername(),activity.getScore());
         }
 
-        Map<String, Long> map = compostMap;
-        LinkedHashMap<String, Long> sortedMap = new LinkedHashMap<>();
-        ArrayList<Long> list = new ArrayList<>();
+        ArrayList<LeaderResponse>leaderResponses=new ArrayList<>();
 
-        for (Map.Entry<String, Long> entry : map.entrySet()) {
-            list.add(entry.getValue());
+        for(String key:compostMap.keySet()){
+            LeaderResponse response=new LeaderResponse();
+            response.setUsername(key);
+            response.setGiftsavailable("cinema ticjers");
+            AppUser user = userService.getUser(key);
+            response.setLevel(String.valueOf(user.getLevel()));
+            response.setScore(compostMap.get(key));
+
+            leaderResponses.add(response);
+
         }
 
-        Collections.sort(list, new Comparator<Long>() {
-            public int compare(Long lg, Long lg1) {
-                return (lg).compareTo(lg1);
-            }
-        });
-        for (Long lr : list) {
-            for (Map.Entry<String, Long> entry : map.entrySet()) {
-                if (entry.getValue().equals(lr)) {
-                    sortedMap.put(entry.getKey(), lr);
-                }
-            }
-        }
-        return sortedMap;
+        return leaderResponses;
+
+
+
 
 
     }
