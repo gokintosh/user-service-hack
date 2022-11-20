@@ -73,6 +73,7 @@ public class TestController {
         compost_activity.setUser(user);
         compost_activity.setScore((long) classificationDto.getPointsEarned());
         compostRepository.save(compost_activity);
+        user.setLevel(ELevel.valueOf(assignLevel(user)));
 
         log.info("Compost activity saved!!");
 
