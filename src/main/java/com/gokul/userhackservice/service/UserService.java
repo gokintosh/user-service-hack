@@ -132,4 +132,22 @@ public class UserService {
 
         return score / count;
     }
+
+    public Float getMonthlyWeight(Long id){
+        List<Compost_Activity> activities = compostRepository.findAllByUser_Id(id);
+        Float weight = 0F;
+
+        for (Compost_Activity activity : activities) {
+            LocalDate date = activity.getDate();
+
+            if (date.getMonth() == LocalDate.now().getMonth() && date.getYear() == LocalDate.now().getYear()) {
+                weight += activity.getScore();
+            }
+
+
+        }
+
+
+        return weight;
+    }
 }

@@ -14,4 +14,6 @@ public class ClassificationDto {
     private String device_id;
 
     private float pointsEarned;
+
+    private float weight;
 }
